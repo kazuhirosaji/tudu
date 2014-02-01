@@ -34,6 +34,13 @@ module Tudu
     def choose(task_name)
       Tudu::Tasks.choose task_name
     end
+    
+    # == revert done => tasks task
+    # === Params
+    #- task_name : target task name
+    def revert(task_name)
+      Tudu::Tasks.revert task_name
+    end
 
     # == doing to done
     #- if doings size == 0, nothing todo.

@@ -254,8 +254,10 @@ module Tudu
       end
 
       def when_choose_no_task?(task, task_name)
-        return true if task.nil?
-        puts "#{task_name} not exists"
+        if task.nil?
+          puts "#{task_name} not exists"
+          return true
+        end
         false
       end
 

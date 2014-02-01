@@ -75,6 +75,12 @@ module Tudu
     def version
       p Tudu::VERSION
     end
+	
+	desc 'revert', 'revert done task to tasks'
+	def revert(*args)
+      Tudu::Core.new.revert args.first
+	  p args.first
+	end
   end
 end
 Tudu::CLI.start(ARGV)

@@ -117,6 +117,23 @@ module Tudu
         puts "complete add doings '#{task_name}'"
       end
 
+      # == choose done => tasks task
+      # === Params
+      #- task_name : target task name
+      def revert(task_name)
+        return if when_done_no_todos?
+        if nil_or_empty? task_name
+          puts "please input task name in done list."
+          return
+        end
+        task = find_tasks(task_name)
+        return if when_choose_no_task?(task, task_name)
+        return unless when_choose_type_is_done?(task, task_name)
+        remove task_name
+        File.open(TUDU_TODOS_FILE_PATH, 'w:UTF-8') { |f|f.puts task_name }
+        puts "complete revert '#{task_name} to todos'"
+      end
+
       # == doing to done
       #- if doings size == 0, nothing todo.
       #- after move doing to done, next todo move to doing.
@@ -206,6 +223,10 @@ module Tudu
         task_name.nil? || task_name.empty? ? get_todos.first.name : task_name
       end
 
+      def nil_or_empty?(task_name)
+        task_name.nil? || task_name.empty?
+      end
+
       def get_each_tasks(type)
         tasks = []
         get_tasks_from_file(type).each { |task|tasks << Tasks.new(type, task) }
@@ -247,6 +268,12 @@ module Tudu
         true
       end
 
+      def when_done_no_todos?
+        return false unless get_dones.size == 0
+        puts 'dones is empty.'
+        true
+      end
+
       def when_choose_no_doings?
         return true if get_doings.size == 0
         puts 'todos is empty.'
@@ -264,6 +291,12 @@ module Tudu
       def when_choose_type_is_todo?(task, task_name)
         return true if task.todo?
         puts "#{task_name} is not exists in todos. #{task_name} in #{task.type}"
+        false
+      end
+
+      def when_choose_type_is_done?(task, task_name)
+        return true if task.done?
+        puts "#{task_name} is not exists in dones. #{task_name} in #{task.type}"
         false
       end
 
